@@ -9,7 +9,7 @@ import org.xml.sax.SAXException;
 
 public class kuir {
 
-	public static void main(String[] args) throws ParserConfigurationException, IOException, TransformerException, SAXException {
+	public static void main(String[] args) throws ParserConfigurationException, IOException, TransformerException, SAXException, ClassNotFoundException {
 		
 		String command = args[0];   
 		String path = args[1];
@@ -25,6 +25,10 @@ public class kuir {
 		else if(command.equals("-i")) {
 			indexer indexer = new indexer(path);
 			indexer.makePost();
+		}
+		else if(command.equals("-s")){
+			searcher searcher = new searcher(path);
+			searcher.calcsim();
 		}
 	}
 }

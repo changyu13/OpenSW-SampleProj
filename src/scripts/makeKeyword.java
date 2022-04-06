@@ -51,7 +51,7 @@ public class makeKeyword {
 		String out = "";
 		for(int i=0; i< kl.size(); i++) {
 			Keyword kwrd = kl.get(i);
-			out += (kwrd.getString() + " : " + kwrd.getCnt()+"# ");
+			out += (" "+kwrd.getString() + " : " + kwrd.getCnt()+"# ");
 		}
 		
 		return out;
