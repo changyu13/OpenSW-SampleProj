@@ -142,7 +142,7 @@ public class indexer {
 			}
 		}
 		
-		FileOutputStream fileStream = new FileOutputStream("./src/data/index.post");
+		FileOutputStream fileStream = new FileOutputStream("./index.post");
 		ObjectOutputStream objectOuputStream = new ObjectOutputStream(fileStream);
 	
 		

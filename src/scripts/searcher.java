@@ -50,7 +50,7 @@ public class searcher {
 	public void calcsim() throws IOException, ParserConfigurationException, SAXException, ClassNotFoundException {
 		
 		Scanner scan = new Scanner(System.in);
-		FileInputStream fileStream = new FileInputStream("./src/data/index.post");
+		FileInputStream fileStream = new FileInputStream(this.input_file);
 		ObjectInputStream objectInputStream = new ObjectInputStream(fileStream);
 		
 		Object object = objectInputStream.readObject();
