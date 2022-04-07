@@ -81,16 +81,10 @@ public class searcher {
 			for(String key: set) {
 				list.add(key);
 				String[] s;
-					int cnt =0;
 					if(hashMap.containsKey("  "+key+" ")) {
 						String str = hashMap.get("  "+key+" ");
 						s = str.split(" ");
-						for(int k=1; k<s.length;k=k+2) {
-							if(Double.parseDouble(s[k])!=0) {
-								cnt++;
-							}
-						}
-						w.add(q_n, query_l.get(key)* Math.log((6.0)/cnt));
+						w.add(q_n, query_l.get(key)*(1.0));
 					}
 					else {
 						w.add(q_n,0.0);
