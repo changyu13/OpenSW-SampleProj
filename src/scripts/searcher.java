@@ -48,7 +48,7 @@ public class searcher {
 	}
 		
 public void CalcSim() throws IOException, ParserConfigurationException, SAXException, ClassNotFoundException {
-		
+		//수정됨
 		Scanner scan = new Scanner(System.in);
 		FileInputStream fileStream = new FileInputStream(this.input_file);
 		ObjectInputStream objectInputStream = new ObjectInputStream(fileStream);
