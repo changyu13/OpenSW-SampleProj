@@ -143,6 +143,7 @@ public class indexer {
 				}
 			}
 		}
+<<<<<<< HEAD
 		for(int j=0;j<h.size();j++) {
 			w[j][0] = w[j][0].trim();
 			w[j][0] = "  "+w[j][0]+" ";
@@ -152,6 +153,9 @@ public class indexer {
 			w[i-1][0] = "  "+w[i-1][0];
 		}*/
 
+=======
+		
+>>>>>>> feature
 		FileOutputStream fileStream = new FileOutputStream("./index.post");
 		ObjectOutputStream objectOuputStream = new ObjectOutputStream(fileStream);
 	
