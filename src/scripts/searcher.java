@@ -47,7 +47,7 @@ public class searcher {
 		return map;
 	}
 		
-	public void calcsim() throws IOException, ParserConfigurationException, SAXException, ClassNotFoundException {
+public void InnerProduct() throws IOException, ParserConfigurationException, SAXException, ClassNotFoundException {
 		
 		Scanner scan = new Scanner(System.in);
 		FileInputStream fileStream = new FileInputStream(this.input_file);
