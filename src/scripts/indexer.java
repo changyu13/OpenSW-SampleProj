@@ -37,7 +37,6 @@ public class indexer {
 		String[] s1;
 		String sum="";
 		int cnt =0;
-		
 		ArrayList <HashMap<String,String>> list = new ArrayList<HashMap<String,String>>();
 		HashMap n1 = new HashMap();
 		HashMap n2 = new HashMap();
@@ -72,10 +71,12 @@ public class indexer {
 			s2[cnt] = s.split(":"); 
 			cnt++;
 		}
+
 		HashMap h = new HashMap();
-		for(int j=0;j<s1.length;j++) {
+		for(int j=0;j<s2.length;j++) {
 			h.put(s2[j][0],s2[j][1]);
 		}
+		h.remove("  파스타 ");
 		
 		//System.out.println("h = "+h);
 		for(int i=0; i<5;i++) {
@@ -91,6 +92,7 @@ public class indexer {
 			String titleData = titleNode.getTextContent();
 			String bodyData = bodyNode.getTextContent();
 			bodyData = bodyData.trim();
+			bodyData = bodyData;
 			int count =0; 
 			
 			String[] doc_s = bodyData.split("#");
@@ -99,11 +101,11 @@ public class indexer {
 				doc_s2[count] = s.split(":"); 
 				count++;
 			}
+			//doc_s2[0][0] = "  "+doc_s2[0][0];
 			
 			for(int j=0;j<doc_s.length;j++) {
 				list.get(i).put(doc_s2[j][0],doc_s2[j][1]);
 			}
-			
 		}
 		System.out.println("리스트 사이즈 : "+list);
 		Iterator <String> keys = h.keySet().iterator();
@@ -141,8 +143,16 @@ public class indexer {
 				}
 			}
 		}
-		
-		FileOutputStream fileStream = new FileOutputStream("./src/data/index.post");
+		for(int j=0;j<h.size();j++) {
+			w[j][0] = w[j][0].trim();
+			w[j][0] = "  "+w[j][0]+" ";
+		}
+		//doc_s2[0][0] = "  "+doc_s2[0][0];
+		/*for(int i : plus) {
+			w[i-1][0] = "  "+w[i-1][0];
+		}*/
+
+		FileOutputStream fileStream = new FileOutputStream("./index.post");
 		ObjectOutputStream objectOuputStream = new ObjectOutputStream(fileStream);
 	
 		
@@ -154,7 +164,6 @@ public class indexer {
 		}
 		objectOuputStream.writeObject(MovieMap);
 		objectOuputStream.close();
-		
 		
 	}
 	private double log(double d) {

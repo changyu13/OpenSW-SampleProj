@@ -50,7 +50,7 @@ public class searcher {
 	public void calcsim() throws IOException, ParserConfigurationException, SAXException, ClassNotFoundException {
 		
 		Scanner scan = new Scanner(System.in);
-		FileInputStream fileStream = new FileInputStream("./src/data/index.post");
+		FileInputStream fileStream = new FileInputStream(this.input_file);
 		ObjectInputStream objectInputStream = new ObjectInputStream(fileStream);
 		
 		Object object = objectInputStream.readObject();
@@ -75,22 +75,18 @@ public class searcher {
 		ArrayList<String> list = new ArrayList();
 		ArrayList<Double> w = new ArrayList();
 		double[] id_n = new double[5];
+		double[] a_n = new double[5];
+		double[] b_n = new double[5];
+		double[] sim = new double[5];
 		Arrays.fill(id_n, 0);
 		int q_n =0;
 		int judge =0;
 			for(String key: set) {
 				list.add(key);
 				String[] s;
-					int cnt =0;
 					if(hashMap.containsKey("  "+key+" ")) {
 						String str = hashMap.get("  "+key+" ");
-						s = str.split(" ");
-						for(int k=1; k<s.length;k=k+2) {
-							if(Double.parseDouble(s[k])!=0) {
-								cnt++;
-							}
-						}
-						w.add(q_n, query_l.get(key)* Math.log((6.0)/cnt));
+						w.add(q_n, query_l.get(key)*(1.0));
 					}
 					else {
 						w.add(q_n,0.0);
@@ -102,26 +98,40 @@ public class searcher {
 			for(int j=0;j<list.size();j++) {
 				if(hashMap.containsKey("  "+list.get(j)+" ")){
 					String s[] = hashMap.get("  "+list.get(j)+" ").split(" ");
-					id_n[i] += w.get(j)*Double.parseDouble(s[i*2+1]);
+					a_n[i] += w.get(j)*w.get(j);
+					b_n[i] += Double.parseDouble(s[i*2+1])*Double.parseDouble(s[i*2+1]);
 				}
 				else {
-					id_n[i] += 0;
+					System.out.println(i+"번째 : "+list.get(j));
+					b_n[i] =0;
+					sim[i] =0;
 				}
 			}
 		}
-		for(int i=0; i<id_n.length;i++)
-		{
-			//System.out.println("w[i] ->"+ w.get(i));
-			//System.out.println("id(i) ->"+ id_n[i]);
-			for(int j =i+1;j<id_n.length;j++) {
-				if(id_n[i] <id_n[j]) {
-					double temp = id_n[i];
-					id_n[i] = id_n[j];
-					id_n[j] = temp;
+		//Q.id(n)구하기
+				for(int i=0;i<5;i++) {
+					//System.out.println(w[i]);
+					for(int j=0;j<list.size();j++) {
+						if(hashMap.containsKey("  "+list.get(j)+" ")){
+							String s[] = hashMap.get("  "+list.get(j)+" ").split(" ");
+							id_n[i] += w.get(j)*Double.parseDouble(s[i*2+1]);
+							System.out.println("가중치 : "+s[i*2+1]);
+						}
+						else {
+							id_n[i] += 0;
+						}
+					}
 				}
+		for(int i=0; i<5; i++) {
+			if(b_n[i]!=0) {
+				sim[i] = (id_n[i])/(Math.sqrt(a_n[i])*Math.sqrt(b_n[i]));
 			}
 		}
 		
+		for(int i=0; i<5; i++)
+		{
+			System.out.println(sim[i]);
+		}
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document document = builder.parse("./index.xml");
@@ -129,8 +139,36 @@ public class searcher {
 		Element root = document.getDocumentElement();
 		NodeList codelist = root.getChildNodes();
 		
+		String s[] = new String[codelist.getLength()];
+		for(int i=0;i<5;i++)
+		{
+			Node item = codelist.item(i);
+			Node titleNode=null, bodyNode=null;
+			if(item.getNodeType() == Node.ELEMENT_NODE) { 
+				titleNode = item.getFirstChild();
+			} else {
+				System.out.println("공백 입니다.");
+			}
+			s[i] = titleNode.getTextContent();
+		}
+		
+		for(int i=0; i<sim.length;i++)
+		{
+			for(int j =i+1;j<sim.length;j++) {
+				if(sim[i] <=sim[j]) {
+					double temp = sim[i];
+					sim[i] = sim[j];
+					sim[j] = temp;
+					String temp2 = s[i];
+					s[i] = s[j];
+					s[j] = temp2;
+				}
+			}
+		}
+		
+		
 		for(int i=0;i<5;i++) {
-			if(id_n[i]>0.0)
+			if(sim[i]>0.0)
 			{
 				judge++;
 			}
@@ -149,22 +187,21 @@ public class searcher {
 				} else {
 					System.out.println("공백 입니다.");
 				}
-				System.out.println(titleNode.getTextContent()+"->"+id_n[i]);
+				System.out.println(s[i]+" : "+sim[i]);
 			}
 		}
 		else {
-			if((id_n[0]==id_n[1])&&(id_n[1]==id_n[2]))
-			{
-				for(int i=2;i>=0;i--)
-				{
-					Node item = codelist.item(i);
-					Node titleNode=null, bodyNode=null;
-					if(item.getNodeType() == Node.ELEMENT_NODE) { 
-						titleNode = item.getFirstChild();
-					} else {
-						System.out.println("공백 입니다.");
-					}
-					System.out.println(titleNode.getTextContent()+" : "+id_n[i]);
+			if((sim[0]==sim[1])&&(sim[1]==sim[2])) {
+					for(int i=2;i>=0;i--)
+					{
+						Node item = codelist.item(i);
+						Node titleNode=null, bodyNode=null;
+						if(item.getNodeType() == Node.ELEMENT_NODE) { 
+							titleNode = item.getFirstChild();
+						} else {
+							System.out.println("공백 입니다.");
+						}
+						System.out.println(s[i]+" : "+sim[i]);
 				}
 			}
 			else {
@@ -177,12 +214,10 @@ public class searcher {
 					} else {
 						System.out.println("공백 입니다.");
 					}
-					System.out.println(titleNode.getTextContent()+" : "+id_n[i]);
+					System.out.println(s[i]+" : "+sim[i]);
 			}
-				System.out.println(judge);
 			}
 		}
-				
 	}
 		
 		
